@@ -1,4 +1,6 @@
 .main {
 	width: 400px;
-	height: 300px;
+}
+.text-bold {
+	font-weight: bold;
 }
