@@ -1,0 +1,5 @@
+To get all users basic data - https://app.asana.com/api/1.0/users?opt_fields=name,email
+To get user's data - https://app.asana.com/api/1.0/users/{USER_ID}
+To get project details - https://app.asana.com/api/1.0/projects/{PROJECT_ID}
+To get project tasks - https://app.asana.com/api/1.0/projects/{PROJECT_ID}/tasks?opt_fields=name,assignee.id
+To get task details - https://app.asana.com/api/1.0/tasks/{TASK_ID}

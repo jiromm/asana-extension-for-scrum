@@ -28,7 +28,7 @@ $(function() {
 					total_not_assigned_stories = 0;
 
 				if (parts.length > 2) {
-					$.get('https://app.asana.com/api/1.0/projects/' + parts[2] + '/tasks', function(data) {
+					$.get('https://app.asana.com/api/1.0/projects/' + parts[2] + '/tasks?opt_fields=name,assignee', function(data) {
 						for (var i in data.data) {
 							if (data.data.hasOwnProperty(i)) {
 								needle = /\[([\d\.]+)\]/.exec(data.data[i].name);
