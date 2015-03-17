@@ -19,15 +19,10 @@
 
 	"content_scripts": [
 		{
-			"matches": ["https://app.asana.com/*"],
+			"matches": ["https://*/*"],
 			"js": [
 				"js/vendor/jquery-1.11.2.min.js",
-				"js/vendor/bootstrap.min.js",
 				"js/main.js"
-			],
-			"css": [
-				"css/bootstrap.min.css",
-				"css/main.css"
 			]
 		}
 	]
