@@ -4,3 +4,6 @@
 .text-bold {
 	font-weight: bold;
 }
+.btn-group > .btn, .btn-group-vertical > .btn {
+	width: 110px;
+}

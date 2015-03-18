@@ -45,17 +45,17 @@ var users = {
 			"completed": 0
 		}
 	},
-	10124585031830: {
-		"name": "Aram Baghdasaryan",
-		"image": "https://s3.amazonaws.com/profile_photos/10124585031830.JrvDk4UBi3WC0VX8vMT7_21x21.png",
+	12950252745597: {
+		"name": "Arbi Baghoomian",
+		"image": "https://s3.amazonaws.com/profile_photos/12950252745597.xddYtxsUKBXFP4oYLpSF_21x21.png",
 		"hours": {
 			"total": 0,
 			"completed": 0
 		}
 	},
-	12950252745597: {
-		"name": "Arbi Baghoomian",
-		"image": "https://s3.amazonaws.com/profile_photos/12950252745597.xddYtxsUKBXFP4oYLpSF_21x21.png",
+	10124585031830: {
+		"name": "Aram Baghdasaryan",
+		"image": "https://s3.amazonaws.com/profile_photos/10124585031830.JrvDk4UBi3WC0VX8vMT7_21x21.png",
 		"hours": {
 			"total": 0,
 			"completed": 0
@@ -149,11 +149,12 @@ $(function() {
 
 						for (var j in users) {
 							if (users.hasOwnProperty(j)) {
-								$('.users').append(
-									'<li class="list-group-item">' +
+								$users.append(
+									'<a href="#" class="list-group-item">' +
+										'<img src="' + users[j]['image'] + '" width="21" height="21"> &nbsp; ' +
 										'<span class="badge">' + users[j]['hours']['completed'] + ' / ' + users[j]['hours']['total'] + '</span>' +
 										users[j]['name'] +
-									'</li>'
+									'</a>'
 								);
 							}
 						}
