@@ -83,7 +83,10 @@ $(function() {
 	var $total_hours = $('.total-hours'),
 		$total_stories = $('.total-stories'),
 		$not_assigned = $('.not-assigned'),
-		$users = $('.users');
+		$users = $('.users'),
+		$wrapper = $('.wrapper'),
+		$loader = $('.loader'),
+		$wrong = $('.wrong');
 
 	if (chrome.hasOwnProperty('tabs')) {
 		chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
@@ -108,6 +111,8 @@ $(function() {
 					taskCompleted;
 
 				if (parts.length > 2) {
+					$loader.removeClass('hide');
+
 					$.get('https://app.asana.com/api/1.0/projects/' + parts[2] + '/tasks?opt_fields=name,assignee,completed', function(data) {
 						for (var i in data.data) {
 							if (data.data.hasOwnProperty(i)) {
@@ -158,9 +163,19 @@ $(function() {
 								);
 							}
 						}
+
+						$loader.fadeOut('fast', function() {
+							$wrapper.hide().removeClass('hide').fadeIn('slow');
+						});
 					}, "json");
+				} else {
+					$wrong.removeClass('hide');
 				}
+			} else {
+				$wrong.removeClass('hide');
 			}
 		});
+	} else {
+		$wrong.removeClass('hide');
 	}
 });

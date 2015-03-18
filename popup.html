@@ -4,50 +4,58 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+	    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700' rel='stylesheet' type='text/css'>
+
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
 
     <div class="container main">
-		<header>
-			<div class="row">
-				<br>
+	    <div class="wrong text-danger text-center hide">You are using it wrong!</div>
 
-				<div class="text-center">
-					<div class="btn-group">
-						<span class="btn btn-default">
-							<h4>Hours</h4>
-							<h2 class="total-hours">146</h2>
-						</span>
-						<span class="btn btn-default">
-							<h4>Stories</h4>
-							<h2 class="total-stories">32</h2>
-						</span>
-						<span class="btn btn-default">
-							<h4>Skipped</h4>
-							<h2 class="not-assigned">12</h2>
-						</span>
+	    <div class="loader hide">Loading...</div>
+
+	    <div class="wrapper hide">
+			<header>
+				<div class="row">
+					<br>
+
+					<div class="text-center">
+						<div class="btn-group">
+							<span class="btn btn-default">
+								<h4>Hours</h4>
+								<h2 class="total-hours">146</h2>
+							</span>
+							<span class="btn btn-default">
+								<h4>Stories</h4>
+								<h2 class="total-stories">32</h2>
+							</span>
+							<span class="btn btn-default">
+								<h4>Skipped</h4>
+								<h2 class="not-assigned">12</h2>
+							</span>
+						</div>
+					</div>
+
+					<br>
+
+					<div class="col-sm-12">
+						<ul class="list-group users text-bold"></ul>
 					</div>
 				</div>
+			</header>
 
-				<br>
+		    <br>
+		    <br>
 
-				<div class="col-sm-12">
-					<ul class="list-group users text-bold"></ul>
-				</div>
-			</div>
-		</header>
-
-	    <br>
-	    <br>
-
-		<footer class="text-center">
-			<small class="text-muted">
-				Exclusively for <a href="http://ginosi.com/" target="_blank" class="text-primary">Ginosi</a><br>
-				&copy; 2015 Aram Baghdasaryan
-			</small>
-		</footer>
+			<footer class="text-center">
+				<small class="text-muted">
+					Exclusively for <a href="http://ginosi.com/" target="_blank" class="text-primary">Ginosi</a><br>
+					&copy; 2015 Aram Baghdasaryan
+				</small>
+			</footer>
+	    </div>
     </div>
 
 	<script src="js/vendor/jquery-1.11.2.min.js"></script>
