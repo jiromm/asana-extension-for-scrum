@@ -22,10 +22,31 @@ body {
 .totals .assigned:after {
 	content: 'estimated';
 	position: absolute;
-	right: 9px;
-	bottom: 19px;
+	right: 16px;
+	bottom: 18px;
 	font-size: 12px;
 	font-family: Tahoma, Arial, sans-serif;
+}
+.totals .achievable {
+	font-size: 17px;
+	vertical-align: super;
+}
+.totals .achievable:after {
+	content: 'achievable';
+	position: absolute;
+	right: 47px;
+	bottom: 18px;
+	font-size: 12px;
+	font-family: Tahoma, Arial, sans-serif;
+}
+.applied-factor {
+	margin-top: -15px;
+}
+.applied-factor input {
+	margin-right: 8px;
+}
+.users input {
+	margin: -2px -8px 0 0;
 }
 .wrong {
 	padding-top: 100px;

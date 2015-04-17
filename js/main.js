@@ -69,8 +69,29 @@ $(function() {
 		$assigned = $('.assigned'),
 		$users = $('.users'),
 		$wrapper = $('.wrapper'),
+		$appliedFactor = $('.applied-factor'),
+		$centralized = $('.centralized'),
+		$achievable = $('.achievable'),
 		$loader = $('.loader'),
 		$wrong = $('.wrong');
+
+	$appliedFactor.on('apply', function(e, isApplied) {
+		if (isApplied) {
+			$(this).find('a').hide();
+			$users.find('.badge').hide();
+
+			$(this).find('.centralized').fadeIn('fast');
+			$users.find('input').fadeIn('fast');
+			$users.find('input').hide().removeClass('hide').fadeIn('fast');
+			$achievable.text(7 * 28).show();
+		} else {
+			$centralized.hide();
+			$achievable.hide();
+			$users.find('input').addClass('hide');
+		}
+	});
+
+	$appliedFactor.trigger('apply', [false]);
 
 	if (chrome.hasOwnProperty('tabs')) {
 		chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
@@ -130,7 +151,7 @@ $(function() {
 
 						$total_hours.text(totalHours);
 						$total_stories.text(totalStories);
-						$assigned.text(totalAssignedStories);
+						$assigned.html(totalAssignedStories + '&nbsp;&nbsp;&nbsp;');
 
 						for (var j in users) {
 							if (users.hasOwnProperty(j)) {
@@ -138,6 +159,7 @@ $(function() {
 									'<a href="#" class="list-group-item">' +
 										'<img src="' + users[j]['image'] + '" width="21" height="21"> &nbsp; ' +
 										'<span class="badge">' + users[j]['hours']['completed'] + ' / ' + users[j]['hours']['total'] + '</span>' +
+										'<input type="number" class="hide pull-right" step="1" min="0" max="40" value="28">' +
 										users[j]['name'] +
 										'</a>'
 								);
@@ -158,4 +180,10 @@ $(function() {
 	} else {
 		$wrong.removeClass('hide');
 	}
+
+	$appliedFactor.find('a').click(function(e) {
+		e.preventDefault();
+
+		$appliedFactor.trigger('apply', [true]);
+	});
 });
