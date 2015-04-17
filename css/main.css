@@ -9,8 +9,11 @@ body {
 .text-bold {
 	/*font-weight: bold;*/
 }
-.btn-group > .btn, .btn-group-vertical > .btn {
-	width: 124px;
+.totals .btn:first-child {
+	width: 231px;
+}
+.totals .btn:last-child {
+	width: 140px;
 }
 .wrong {
 	padding-top: 100px;
