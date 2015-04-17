@@ -15,6 +15,18 @@ body {
 .totals .btn:last-child {
 	width: 140px;
 }
+.totals .assigned {
+	font-size: 17px;
+	vertical-align: super;
+}
+.totals .assigned:after {
+	content: 'estimated';
+	position: absolute;
+	right: 9px;
+	bottom: 19px;
+	font-size: 12px;
+	font-family: Tahoma, Arial, sans-serif;
+}
 .wrong {
 	padding-top: 100px;
 }
