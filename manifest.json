@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Asana for scrum",
-	"version": "1.1.2",
+	"version": "1.2.0",
 
 
 	"description": "This extension calculates total hours of sprint",
