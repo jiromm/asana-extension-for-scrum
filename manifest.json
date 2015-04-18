@@ -1,19 +1,23 @@
 {
 	"manifest_version": 2,
+	"name": "Asana for scrum",
+	"version": "1.1.1",
 
+
+	"default_locale": "en",
+	"description": "This extension calculates total hours of sprint",
 	"icons": {
 		"24": "assets/24.png",
 		"128": "assets/128.png"
 	},
 
-	"name": "Asana for scrum",
-	"description": "This extension calculates total hours of sprint",
-	"version": "1.1.0",
+	"author": "Aram Baghdasaryan",
 
 	"browser_action": {
 		"default_icon": "assets/icon.png",
 		"default_popup": "popup.html"
 	},
+
 	"permissions": [
 		"tabs",
 		"storage",
