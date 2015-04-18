@@ -197,6 +197,12 @@ $(function() {
 								needle = /\[([\d\.]+)\]/.exec(data.data[i].name);
 								totalStories++;
 
+								// Detect assigned or not
+								if (taskAssignee) {
+									totalAssignedStories++;
+								}
+
+								// Calculate hours
 								if (needle !== null) {
 									hour = parseFloat(needle[1]);
 									totalHours += hour;
@@ -208,8 +214,6 @@ $(function() {
 											if (taskCompleted) {
 												users[taskAssignee.id]['hours']['completed'] += hour;
 											}
-
-											totalAssignedStories++;
 										}
 									}
 								}
