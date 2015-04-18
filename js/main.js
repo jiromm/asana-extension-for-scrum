@@ -64,7 +64,8 @@ var getLocation = function(href) {
 	};
 
 $(function() {
-	var $totals = $('.totals'),
+	var userIdList = {},
+		$totals = $('.totals'),
 		$totalHours = $('.total-hours'),
 		$totalStories = $('.total-stories'),
 		$assigned = $('.assigned'),
@@ -76,13 +77,40 @@ $(function() {
 		$loader = $('.loader'),
 		$wrong = $('.wrong');
 
+	// Define totals
+	if (localStorage.getItem('appliedFactor') == undefined) {
+		var defaultHours = 28;
+
+		for (var userId in users) {
+			userIdList[userId] = defaultHours;
+		}
+
+		localStorage.setItem('appliedFactor', JSON.stringify(userIdList));
+		localStorage.setItem('defaultHour', defaultHours);
+		$centralized.find('input').val(defaultHours);
+	} else {
+		$centralized.find('input').val(
+			localStorage.getItem('defaultHour')
+		);
+	}
+
+	userIdList = JSON.parse(
+		localStorage.getItem('appliedFactor')
+	);
+
 	$totals.on('calculate', function() {
 		var total = 0;
 
 		$users.find('input').each(function() {
-			total += parseInt($(this).val());
+			var userId = parseInt($(this).closest('.list-group-item').attr('data-user-id')),
+				userHour = parseInt($(this).val());
+
+			userIdList[userId] = userHour;
+			total += userHour;
 		});
 
+		localStorage.setItem('appliedFactor', JSON.stringify(userIdList));
+		localStorage.setItem('defaultHour', parseInt($centralized.find('input').val()));
 		$achievable.text(total);
 	});
 
@@ -165,10 +193,10 @@ $(function() {
 						for (var j in users) {
 							if (users.hasOwnProperty(j)) {
 								$users.append(
-									'<a href="#" class="list-group-item">' +
+									'<a href="#" class="list-group-item" data-user-id="' + j + '">' +
 										'<img src="' + users[j]['image'] + '" width="21" height="21"> &nbsp; ' +
 										'<span class="badge">' + users[j]['hours']['completed'] + ' / ' + users[j]['hours']['total'] + '</span>' +
-										'<input type="number" class="hide pull-right" step="1" min="0" max="40" value="28">' +
+										'<input type="number" class="hide pull-right" step="1" min="0" max="40" value="' + userIdList[j] + '">' +
 										users[j]['name'] +
 									'</a>'
 								);
@@ -198,7 +226,7 @@ $(function() {
 		$appliedFactor.trigger('apply', [true]);
 	});
 
-	$appliedFactor.find('input').change(function() {
+	$appliedFactor.find('input').on('change, input', function() {
 		var self = $(this);
 
 		$users.find('.list-group-item').each(function() {
@@ -216,7 +244,7 @@ $(function() {
 		$totals.trigger('calculate');
 	});
 
-	$users.on('change', 'input', function() {
+	$users.on('change, input', 'input', function() {
 		$totals.trigger('calculate');
 	});
 
