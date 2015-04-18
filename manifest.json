@@ -8,7 +8,7 @@
 
 	"name": "Asana for scrum",
 	"description": "This extension calculates total hours of sprint",
-	"version": "1.0",
+	"version": "1.1.0",
 
 	"browser_action": {
 		"default_icon": "assets/icon.png",
