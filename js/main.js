@@ -157,6 +157,7 @@ $(function() {
 					$loader.removeClass('hide');
 
 					$.get('https://app.asana.com/api/1.0/projects/' + parts[2] + '/tasks?opt_fields=name,assignee,completed', function(data) {
+						console.log(data);
 						for (var i in data.data) {
 							if (data.data.hasOwnProperty(i)) {
 								task = data.data[i];
@@ -169,12 +170,11 @@ $(function() {
 								}
 
 								needle = /\[([\d\.]+)\]/.exec(data.data[i].name);
+								totalStories++;
 
 								if (needle !== null) {
 									hour = parseFloat(needle[1]);
-
 									totalHours += hour;
-									totalStories++;
 
 									if (taskAssignee !== null) {
 										if (users.hasOwnProperty(taskAssignee.id)) {
