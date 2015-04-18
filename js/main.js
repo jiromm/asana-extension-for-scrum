@@ -64,8 +64,9 @@ var getLocation = function(href) {
 	};
 
 $(function() {
-	var $total_hours = $('.total-hours'),
-		$total_stories = $('.total-stories'),
+	var $totals = $('.totals'),
+		$totalHours = $('.total-hours'),
+		$totalStories = $('.total-stories'),
 		$assigned = $('.assigned'),
 		$users = $('.users'),
 		$wrapper = $('.wrapper'),
@@ -74,6 +75,16 @@ $(function() {
 		$achievable = $('.achievable'),
 		$loader = $('.loader'),
 		$wrong = $('.wrong');
+
+	$totals.on('calculate', function() {
+		var total = 0;
+
+		$users.find('input').each(function() {
+			total += parseInt($(this).val());
+		});
+
+		$achievable.text(total);
+	});
 
 	$appliedFactor.on('apply', function(e, isApplied) {
 		if (isApplied) {
@@ -149,8 +160,8 @@ $(function() {
 							}
 						}
 
-						$total_hours.text(totalHours);
-						$total_stories.text(totalStories);
+						$totalHours.text(totalHours);
+						$totalStories.text(totalStories);
 						$assigned.html(totalAssignedStories + '&nbsp;&nbsp;&nbsp;');
 
 						for (var j in users) {
@@ -161,7 +172,7 @@ $(function() {
 										'<span class="badge">' + users[j]['hours']['completed'] + ' / ' + users[j]['hours']['total'] + '</span>' +
 										'<input type="number" class="hide pull-right" step="1" min="0" max="40" value="28">' +
 										users[j]['name'] +
-										'</a>'
+									'</a>'
 								);
 							}
 						}
@@ -185,5 +196,35 @@ $(function() {
 		e.preventDefault();
 
 		$appliedFactor.trigger('apply', [true]);
+	});
+
+	$appliedFactor.find('input').change(function() {
+		var self = $(this);
+
+		$users.find('.list-group-item').each(function() {
+			var input = $(this).find('input');
+
+			if ($(this).hasClass('active')) {
+				// continue
+			} else {
+				input.val(
+					self.val()
+				);
+			}
+		});
+
+		$totals.trigger('calculate');
+	});
+
+	$users.on('change', 'input', function() {
+		$totals.trigger('calculate');
+	});
+
+	$users.on('click', '.list-group-item', function(e) {
+		e.preventDefault();
+
+		if (e.target.tagName != 'INPUT') {
+			$(this).toggleClass('active');
+		}
 	});
 });

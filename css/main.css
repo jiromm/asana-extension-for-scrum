@@ -51,6 +51,9 @@ body {
 .wrong {
 	padding-top: 100px;
 }
+.active input {
+	color: #000;
+}
 
 .loader,
 .loader:before,
