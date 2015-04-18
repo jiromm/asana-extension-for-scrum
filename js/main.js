@@ -111,7 +111,7 @@ $(function() {
 
 		localStorage.setItem('appliedFactor', JSON.stringify(userIdList));
 		localStorage.setItem('defaultHour', parseInt($appliedFactor.find('input').val()));
-		$achievable.text(total);
+		$achievable.text(isNaN(total) ? 0 : total);
 	});
 
 	// Enable/disable applied factor
