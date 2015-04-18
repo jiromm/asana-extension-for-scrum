@@ -30,6 +30,7 @@ body {
 }
 .applied-factor {
 	margin-top: -15px;
+	height: 26px;
 }
 .applied-factor input {
 	margin-right: 8px;
