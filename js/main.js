@@ -94,10 +94,8 @@ $(function() {
 			$(this).find('.centralized').fadeIn('fast');
 			$users.find('input').fadeIn('fast');
 			$users.find('input').hide().removeClass('hide').fadeIn('fast');
-			$achievable.text(7 * 28).show();
 		} else {
 			$centralized.hide();
-			$achievable.hide();
 			$users.find('input').addClass('hide');
 		}
 	});
@@ -180,6 +178,8 @@ $(function() {
 						$loader.fadeOut('fast', function() {
 							$wrapper.hide().removeClass('hide').fadeIn('slow');
 						});
+
+						$totals.trigger('calculate');
 					}, "json");
 				} else {
 					$wrong.removeClass('hide');

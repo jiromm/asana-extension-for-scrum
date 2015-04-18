@@ -15,29 +15,18 @@ body {
 .totals .btn:last-child {
 	width: 140px;
 }
-.totals .assigned {
-	font-size: 17px;
-	vertical-align: super;
-}
-.totals .assigned:after {
-	content: 'estimated';
-	position: absolute;
-	right: 16px;
-	bottom: 18px;
+.totals .addon {
+	margin-top: -15px;
 	font-size: 12px;
-	font-family: Tahoma, Arial, sans-serif;
 }
-.totals .achievable {
-	font-size: 17px;
-	vertical-align: super;
+.totals h4 {
+	margin-bottom: -10px;
 }
-.totals .achievable:after {
-	content: 'achievable';
-	position: absolute;
-	right: 47px;
-	bottom: 18px;
-	font-size: 12px;
-	font-family: Tahoma, Arial, sans-serif;
+.totals .btn h2.primary:after {
+	content: "/";
+	position: relative;
+	left: 15px;
+	color: #ccc;
 }
 .applied-factor {
 	margin-top: -15px;
