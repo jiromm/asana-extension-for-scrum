@@ -72,7 +72,6 @@ $(function() {
 		$users = $('.users'),
 		$wrapper = $('.wrapper'),
 		$appliedFactor = $('.applied-factor'),
-		$centralized = $('.centralized'),
 		$achievable = $('.achievable'),
 		$loader = $('.loader'),
 		$wrong = $('.wrong');
@@ -87,9 +86,9 @@ $(function() {
 
 		localStorage.setItem('appliedFactor', JSON.stringify(userIdList));
 		localStorage.setItem('defaultHour', defaultHours);
-		$centralized.find('input').val(defaultHours);
+		$appliedFactor.find('input').val(defaultHours);
 	} else {
-		$centralized.find('input').val(
+		$appliedFactor.find('input').val(
 			localStorage.getItem('defaultHour')
 		);
 	}
@@ -98,6 +97,7 @@ $(function() {
 		localStorage.getItem('appliedFactor')
 	);
 
+	// Calculate total hours
 	$totals.on('calculate', function() {
 		var total = 0;
 
@@ -110,21 +110,26 @@ $(function() {
 		});
 
 		localStorage.setItem('appliedFactor', JSON.stringify(userIdList));
-		localStorage.setItem('defaultHour', parseInt($centralized.find('input').val()));
+		localStorage.setItem('defaultHour', parseInt($appliedFactor.find('input').val()));
 		$achievable.text(total);
 	});
 
+	// Enable/disable applied factor
 	$appliedFactor.on('apply', function(e, isApplied) {
 		if (isApplied) {
-			$(this).find('a').hide();
+			$users.find('input').hide().removeClass('hide').fadeIn('fast');
 			$users.find('.badge').hide();
 
-			$(this).find('.centralized').fadeIn('fast');
-			$users.find('input').fadeIn('fast');
-			$users.find('input').hide().removeClass('hide').fadeIn('fast');
+			$(this).find('a').text('Close');
+			$(this).find('input').fadeIn('fast', function() {
+				$(this).focus()
+			});
 		} else {
-			$centralized.hide();
+			$users.find('.badge').show();
 			$users.find('input').addClass('hide');
+
+			$(this).find('input').hide();
+			$(this).find('a').text('Applied Factor');
 		}
 	});
 
@@ -223,7 +228,11 @@ $(function() {
 	$appliedFactor.find('a').click(function(e) {
 		e.preventDefault();
 
-		$appliedFactor.trigger('apply', [true]);
+		var isActive = parseInt($(this).attr('data-is-active'));
+
+		$(this).attr('data-is-active', isActive ? 0 : 1);
+
+		$appliedFactor.trigger('apply', [isActive ? false : true]);
 	});
 
 	$appliedFactor.find('input').on('change, input', function() {
