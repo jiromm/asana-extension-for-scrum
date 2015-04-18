@@ -9,6 +9,19 @@ body {
 .text-bold {
 	/*font-weight: bold;*/
 }
+.tags .btn {
+	width: 122px;
+	font-weight: bold;
+}
+.tag-container-bug {
+	color: rgb(103, 67, 179);
+}
+.tag-container-critical {
+	color: rgb(199, 63, 39);
+}
+.tag-container-debt {
+	color: rgb(177, 63, 148);
+}
 .totals .btn:first-child {
 	width: 231px;
 }

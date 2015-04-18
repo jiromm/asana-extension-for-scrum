@@ -61,6 +61,11 @@ var getLocation = function(href) {
 				"completed": 0
 			}
 		}
+	},
+	tagsIdList = {
+		1367012534094: 'bug',
+		1379750807237: 'critical',
+		29189199083474: 'debt'
 	};
 
 $(function() {
@@ -68,6 +73,9 @@ $(function() {
 		$totals = $('.totals'),
 		$totalHours = $('.total-hours'),
 		$totalStories = $('.total-stories'),
+		$tagBug = $('.tag-bug'),
+		$tagCritical = $('.tag-critical'),
+		$tagDebt = $('.tag-debt'),
 		$assigned = $('.assigned'),
 		$users = $('.users'),
 		$wrapper = $('.wrapper'),
@@ -147,6 +155,11 @@ $(function() {
 					totalHours = 0,
 					totalStories = 0,
 					totalAssignedStories = 0,
+					tags = {
+						bug: 0,
+						critical: 0,
+						debt: 0
+					},
 					hour,
 					task,
 					taskName,
@@ -156,8 +169,7 @@ $(function() {
 				if (parts.length > 2) {
 					$loader.removeClass('hide');
 
-					$.get('https://app.asana.com/api/1.0/projects/' + parts[2] + '/tasks?opt_fields=name,assignee,completed', function(data) {
-						console.log(data);
+					$.get('https://app.asana.com/api/1.0/projects/' + parts[2] + '/tasks?opt_fields=name,assignee,completed,tags', function(data) {
 						for (var i in data.data) {
 							if (data.data.hasOwnProperty(i)) {
 								task = data.data[i];
@@ -165,10 +177,23 @@ $(function() {
 								taskAssignee = task.assignee;
 								taskCompleted = task.completed;
 
+								// Detect section
 								if (taskName.slice(-1) == ':') {
 									continue;
 								}
 
+								// Detect tags
+								if (task.tags.length) {
+									for (var j in task.tags) {
+										if (task.tags.hasOwnProperty(j)) {
+											if (tagsIdList[task.tags[j].id] != undefined) {
+												tags[tagsIdList[task.tags[j].id]]++;
+											}
+										}
+									}
+								}
+
+								// Detect estimated story
 								needle = /\[([\d\.]+)\]/.exec(data.data[i].name);
 								totalStories++;
 
@@ -193,7 +218,11 @@ $(function() {
 
 						$totalHours.text(totalHours);
 						$totalStories.text(totalStories);
-						$assigned.html(totalAssignedStories + '&nbsp;&nbsp;&nbsp;');
+						$assigned.html(totalAssignedStories);
+
+						$tagBug.text(tags.bug);
+						$tagCritical.text(tags.critical);
+						$tagDebt.text(tags.debt);
 
 						for (var j in users) {
 							if (users.hasOwnProperty(j)) {
