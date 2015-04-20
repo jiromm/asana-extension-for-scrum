@@ -28,9 +28,20 @@ h2 {
 .tag-container-debt {
 	color: rgb(177, 63, 148);
 }
-.totals,
-.tags {
+.tag-hour {
+	color: #444444;
+}
+.tag-hour:before {
+	content: '[';
+}
+.tag-hour:after {
+	content: ']';
+}
+.totals {
 	text-shadow: 1px 1px 0 rgba(255, 255, 255, .6);
+}
+.tags {
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, .8);
 }
 .totals .btn:first-child {
 	width: 246px;

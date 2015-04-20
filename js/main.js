@@ -73,9 +73,15 @@ $(function() {
 		$totals = $('.totals'),
 		$totalHours = $('.total-hours'),
 		$totalStories = $('.total-stories'),
+
 		$tagBug = $('.tag-bug'),
 		$tagCritical = $('.tag-critical'),
 		$tagDebt = $('.tag-debt'),
+
+		$tagHourBug = $('.tag-bug-hours'),
+		$tagHourCritical = $('.tag-critical-hours'),
+		$tagHourDebt = $('.tag-debt-hours'),
+
 		$assigned = $('.assigned'),
 		$users = $('.users'),
 		$wrapper = $('.wrapper'),
@@ -155,9 +161,18 @@ $(function() {
 					parts = pathname.split('/'),
 					needle = null,
 					tags = {
-						bug: 0,
-						critical: 0,
-						debt: 0
+						bug: {
+							count: 0,
+							hours: 0
+						},
+						critical: {
+							count: 0,
+							hours: 0
+						},
+						debt: {
+							count: 0,
+							hours: 0
+						}
 					},
 					hours = {
 						estimated: 0,
@@ -191,17 +206,6 @@ $(function() {
 									continue;
 								}
 
-								// Detect tags
-								if (task.tags.length) {
-									for (var j in task.tags) {
-										if (task.tags.hasOwnProperty(j)) {
-											if (tagsIdList[task.tags[j].id] != undefined) {
-												tags[tagsIdList[task.tags[j].id]]++;
-											}
-										}
-									}
-								}
-
 								// Detect estimated story
 								needle = /\[([\d\.]+)\]/.exec(data.data[i].name);
 								stories.total++;
@@ -216,6 +220,18 @@ $(function() {
 									hour = parseFloat(needle[1]);
 									hours.total += hour;
 									stories.estimated++;
+
+									// Detect tags count
+									if (task.tags.length) {
+										for (var j in task.tags) {
+											if (task.tags.hasOwnProperty(j)) {
+												if (tagsIdList[task.tags[j].id] != undefined) {
+													tags[tagsIdList[task.tags[j].id]].count++;
+													tags[tagsIdList[task.tags[j].id]].hours += hour;
+												}
+											}
+										}
+									}
 
 									// Detect total completed hours
 									if (taskCompleted) {
@@ -241,9 +257,15 @@ $(function() {
 						$assigned.html(stories.assigned);
 						$estimated.html(stories.estimated);
 
-						$tagBug.text(tags.bug);
-						$tagCritical.text(tags.critical);
-						$tagDebt.text(tags.debt);
+						$tagBug.text(tags.bug.count);
+						$tagCritical.text(tags.critical.count);
+						$tagDebt.text(tags.debt.count);
+
+						$tagHourBug.text(tags.bug.hours);
+						$tagHourCritical.text(tags.critical.hours);
+						$tagHourDebt.text(tags.debt.hours);
+
+						console.log(tags);
 
 						for (var j in users) {
 							if (users.hasOwnProperty(j)) {
