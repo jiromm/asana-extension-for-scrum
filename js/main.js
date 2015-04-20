@@ -81,6 +81,8 @@ $(function() {
 		$wrapper = $('.wrapper'),
 		$appliedFactor = $('.applied-factor'),
 		$achievable = $('.achievable'),
+		$estimated = $('.estimated'),
+		$completed = $('.completed'),
 		$loader = $('.loader'),
 		$wrong = $('.wrong');
 
@@ -152,13 +154,20 @@ $(function() {
 				var pathname = url.pathname,
 					parts = pathname.split('/'),
 					needle = null,
-					totalHours = 0,
-					totalStories = 0,
-					totalAssignedStories = 0,
 					tags = {
 						bug: 0,
 						critical: 0,
 						debt: 0
+					},
+					hours = {
+						estimated: 0,
+						completed: 0,
+						total: 0
+					},
+					stories = {
+						estimated: 0,
+						assigned: 0,
+						total: 0
 					},
 					hour,
 					task,
@@ -195,17 +204,23 @@ $(function() {
 
 								// Detect estimated story
 								needle = /\[([\d\.]+)\]/.exec(data.data[i].name);
-								totalStories++;
+								stories.total++;
 
 								// Detect assigned or not
 								if (taskAssignee) {
-									totalAssignedStories++;
+									stories.assigned++;
 								}
 
 								// Calculate hours
 								if (needle !== null) {
 									hour = parseFloat(needle[1]);
-									totalHours += hour;
+									hours.total += hour;
+									stories.estimated++;
+
+									// Detect total completed hours
+									if (taskCompleted) {
+										hours.completed += hour;
+									}
 
 									if (taskAssignee !== null) {
 										if (users.hasOwnProperty(taskAssignee.id)) {
@@ -220,9 +235,11 @@ $(function() {
 							}
 						}
 
-						$totalHours.text(totalHours);
-						$totalStories.text(totalStories);
-						$assigned.html(totalAssignedStories);
+						$totalHours.text(hours.total);
+						$completed.html(hours.completed);
+						$totalStories.text(stories.total);
+						$assigned.html(stories.assigned);
+						$estimated.html(stories.estimated);
 
 						$tagBug.text(tags.bug);
 						$tagCritical.text(tags.critical);
