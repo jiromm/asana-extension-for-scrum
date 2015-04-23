@@ -222,7 +222,7 @@ $(function() {
 									stories.estimated++;
 
 									// Detect tags count
-									if (task.tags.length) {
+									if (task.tags.length && hour > 0) {
 										for (var j in task.tags) {
 											if (task.tags.hasOwnProperty(j)) {
 												if (tagsIdList[task.tags[j].id] != undefined) {
