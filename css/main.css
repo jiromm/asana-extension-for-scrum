@@ -9,27 +9,17 @@ h2 {
 	min-height: 230px;
 	position: relative;
 }
-.text-bold {
-	/*font-weight: bold;*/
+.tags {
+	margin-bottom: 2px;
 }
-.tags .btn {
+.tags .btn,
+.sections .btn {
 	width: 151px;
 	font-weight: bold;
 }
-.tags .btn:last-child {
+.tags .btn:last-child,
+.sections .btn:last-child {
 	width: 150px;
-}
-.tag-container-bug {
-	color: rgb(103, 67, 179);
-}
-.tag-container-critical {
-	color: rgb(199, 63, 39);
-}
-.tag-container-debt {
-	color: rgb(177, 63, 148);
-}
-.tag-hour {
-	color: #444444;
 }
 .tag-hour:before {
 	content: '[';
@@ -81,18 +71,6 @@ h2 {
 }
 .active input {
 	color: #000;
-}
-
-.table-null.table {
-	margin: 0;
-}
-.table-null.table > thead > tr > th,
-.table-null.table > tbody > tr > th,
-.table-null.table > tfoot > tr > th,
-.table-null.table > thead > tr > td,
-.table-null.table > tbody > tr > td,
-.table-null.table > tfoot > tr > td {
-	border: none;
 }
 
 .loader,
