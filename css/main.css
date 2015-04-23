@@ -83,6 +83,18 @@ h2 {
 	color: #000;
 }
 
+.table-null.table {
+	margin: 0;
+}
+.table-null.table > thead > tr > th,
+.table-null.table > tbody > tr > th,
+.table-null.table > tfoot > tr > th,
+.table-null.table > thead > tr > td,
+.table-null.table > tbody > tr > td,
+.table-null.table > tfoot > tr > td {
+	border: none;
+}
+
 .loader,
 .loader:before,
 .loader:after {

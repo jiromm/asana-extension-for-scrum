@@ -82,6 +82,8 @@ $(function() {
 		$tagHourCritical = $('.tag-critical-hours'),
 		$tagHourDebt = $('.tag-debt-hours'),
 
+		$sections = $('.sections'),
+
 		$assigned = $('.assigned'),
 		$users = $('.users'),
 		$wrapper = $('.wrapper'),
@@ -184,6 +186,14 @@ $(function() {
 						assigned: 0,
 						total: 0
 					},
+					section = {
+						tempIndex: 'maintenance',
+						hours: {
+							strategic: 0,
+							tactical: 0,
+							maintenance: 0
+						}
+					},
 					hour,
 					task,
 					taskName,
@@ -203,6 +213,12 @@ $(function() {
 
 								// Detect section
 								if (taskName.slice(-1) == ':') {
+									var taskSectionName = taskName.slice(0, -1).toLowerCase();
+
+									section.tempIndex = section.hours[taskSectionName] == undefined
+										? 'maintenance'
+										: taskSectionName;
+
 									continue;
 								}
 
@@ -220,6 +236,9 @@ $(function() {
 									hour = parseFloat(needle[1]);
 									hours.total += hour;
 									stories.estimated++;
+
+									// Count section hours
+									section.hours[section.tempIndex] += hour;
 
 									// Detect tags count
 									if (task.tags.length && hour > 0) {
@@ -265,7 +284,9 @@ $(function() {
 						$tagHourCritical.text(tags.critical.hours);
 						$tagHourDebt.text(tags.debt.hours);
 
-						console.log(tags);
+						$sections.find('.block-strategic .point').text(section.hours.strategic);
+						$sections.find('.block-tactical .point').text(section.hours.tactical);
+						$sections.find('.block-maintenance .point').text(section.hours.maintenance);
 
 						for (var j in users) {
 							if (users.hasOwnProperty(j)) {
