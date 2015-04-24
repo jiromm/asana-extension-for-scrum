@@ -97,6 +97,21 @@ h2 {
 .text-muted .btn {
 	color: #888 !important;
 }
+.users .badge {
+	color: #444;
+	background: transparent;
+	font-size: 16px;
+	margin-right: -7px;
+}
+span.taken:after {
+	content: "/";
+	padding-left: 10px;
+	color: #aaa;
+}
+span.taken {
+	margin-right: 10px;
+	font-size: 12px;
+}
 
 
 .loader,

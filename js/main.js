@@ -293,7 +293,10 @@ $(function() {
 								$users.append(
 									'<a href="#" class="list-group-item" data-user-id="' + j + '">' +
 										'<img src="' + users[j]['image'] + '" width="21" height="21"> &nbsp; ' +
-										'<span class="badge">' + users[j]['hours']['completed'] + ' / ' + users[j]['hours']['total'] + '</span>' +
+										'<span class="badge">' +
+											'<span class="taken text-success">' + users[j]['hours']['completed'] + '</span>' +
+											'<span class="done">' + users[j]['hours']['total'] + '</span>' +
+										'</span>' +
 										'<input type="number" class="hide pull-right" step="1" min="0" max="40" value="' + userIdList[j] + '">' +
 										users[j]['name'] +
 									'</a>'
