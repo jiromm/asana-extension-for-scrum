@@ -112,6 +112,9 @@ span.taken {
 	margin-right: 10px;
 	font-size: 12px;
 }
+.btn-group .btn {
+	font-weight: normal;
+}
 
 
 .loader,
