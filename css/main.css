@@ -30,7 +30,8 @@ h2 {
 .totals {
 	text-shadow: 1px 1px 0 rgba(255, 255, 255, .6);
 }
-.tags {
+.tags,
+.sections {
 	text-shadow: 1px 1px 0 rgba(255, 255, 255, .8);
 }
 .totals .btn:first-child {
@@ -72,6 +73,31 @@ h2 {
 .active input {
 	color: #000;
 }
+.top1 {
+	margin-top: -1px;
+}
+.top3 {
+	margin-top: -3px;
+}
+.statistics-group .btn-group .btn {
+	border-radius: 0;
+}
+.statistics-group .left-top {
+	border-top-left-radius: 4px !important;
+}
+.statistics-group .right-top {
+	border-top-right-radius: 4px !important;
+}
+.statistics-group .left-bottom {
+	border-bottom-left-radius: 4px !important;
+}
+.statistics-group .right-bottom {
+	border-bottom-right-radius: 4px !important;
+}
+.text-muted .btn {
+	color: #888 !important;
+}
+
 
 .loader,
 .loader:before,
