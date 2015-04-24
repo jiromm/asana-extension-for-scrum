@@ -9,9 +9,6 @@ h2 {
 	min-height: 230px;
 	position: relative;
 }
-.tags {
-	margin-bottom: 2px;
-}
 .tags .btn,
 .sections .btn {
 	width: 151px;

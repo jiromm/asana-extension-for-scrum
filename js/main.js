@@ -1,96 +1,13 @@
-var getLocation = function(href) {
-		var l = document.createElement("a");
-		l.href = href;
-
-		return l;
-	},
-	users = {
-		10124585031848: {
-			"name": "Eduard Aleksanyan",
-			"image": "https://s3.amazonaws.com/profile_photos/10124585031848.wyUMUWeGEyfd7bXATcGa_21x21.png",
-			"hours": {
-				"total": 0,
-				"completed": 0
-			}
-		},
-		11686527531417: {
-			"name": "Tigran Ghabuzyan",
-			"image": "https://s3.amazonaws.com/profile_photos/11686527531417.QOvoSX7R6lTJSG9VDBQI_21x21.png",
-			"hours": {
-				"total": 0,
-				"completed": 0
-			}
-		},
-		10124585031839: {
-			"name": "Tigran Petrosyan",
-			"image": "https://s3.amazonaws.com/profile_photos/10124585031839.Zvk5gKoGkI4BZNXFeAG7_21x21.png",
-			"hours": {
-				"total": 0,
-				"completed": 0
-			}
-		},
-		5754650264628: {
-			"name": "Tigran Tadevosyan",
-			"image": "https://s3.amazonaws.com/profile_photos/5754650264628.J6jyaDiKxliFxx4kIpiU_21x21.png",
-			"hours": {
-				"total": 0,
-				"completed": 0
-			}
-		},
-		25719136431202: {
-			"name": "Hrayr Papikyan",
-			"image": "https://s3.amazonaws.com/profile_photos/25719136431202.G39up5gCwyUO8Lg5UhBL_21x21.png",
-			"hours": {
-				"total": 0,
-				"completed": 0
-			}
-		},
-		12950252745597: {
-			"name": "Arbi Baghoomian",
-			"image": "https://s3.amazonaws.com/profile_photos/12950252745597.xddYtxsUKBXFP4oYLpSF_21x21.png",
-			"hours": {
-				"total": 0,
-				"completed": 0
-			}
-		},
-		10124585031830: {
-			"name": "Aram Baghdasaryan",
-			"image": "https://s3.amazonaws.com/profile_photos/10124585031830.JrvDk4UBi3WC0VX8vMT7_21x21.png",
-			"hours": {
-				"total": 0,
-				"completed": 0
-			}
-		}
-	},
-	tagsIdList = {
-		1367012534094: 'bug',
-		1379750807237: 'critical',
-		29189199083474: 'debt'
-	};
-
 $(function() {
 	var userIdList = {},
 		$totals = $('.totals'),
-		$totalHours = $('.total-hours'),
-		$totalStories = $('.total-stories'),
 
-		$tagBug = $('.tag-bug'),
-		$tagCritical = $('.tag-critical'),
-		$tagDebt = $('.tag-debt'),
-
-		$tagHourBug = $('.tag-bug-hours'),
-		$tagHourCritical = $('.tag-critical-hours'),
-		$tagHourDebt = $('.tag-debt-hours'),
-
+		$tags = $('.tags'),
 		$sections = $('.sections'),
 
-		$assigned = $('.assigned'),
 		$users = $('.users'),
 		$wrapper = $('.wrapper'),
 		$appliedFactor = $('.applied-factor'),
-		$achievable = $('.achievable'),
-		$estimated = $('.estimated'),
-		$completed = $('.completed'),
 		$loader = $('.loader'),
 		$wrong = $('.wrong');
 
@@ -111,12 +28,13 @@ $(function() {
 		);
 	}
 
+	// Get user's id list
 	userIdList = JSON.parse(
 		localStorage.getItem('appliedFactor')
 	);
 
 	// Calculate total hours
-	$totals.on('calculate', function() {
+	$totals.on('calculateTotalHours', function() {
 		var total = 0;
 
 		$users.find('input').each(function() {
@@ -129,7 +47,7 @@ $(function() {
 
 		localStorage.setItem('appliedFactor', JSON.stringify(userIdList));
 		localStorage.setItem('defaultHour', parseInt($appliedFactor.find('input').val()));
-		$achievable.text(isNaN(total) ? 0 : total);
+		$totals.find('.possible').text(isNaN(total) ? 0 : total);
 	});
 
 	// Enable/disable applied factor
@@ -151,8 +69,10 @@ $(function() {
 		}
 	});
 
+	// Apply default settings for applied factor
 	$appliedFactor.trigger('apply', [false]);
 
+	// Process task identification
 	if (chrome.hasOwnProperty('tabs')) {
 		chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
 			var tablink = arrayOfTabs[0].url,
@@ -198,12 +118,8 @@ $(function() {
 					task,
 					taskName,
 					taskAssignee,
-					taskCompleted;
-
-				if (parts.length > 2) {
-					$loader.removeClass('hide');
-
-					$.get('https://app.asana.com/api/1.0/projects/' + parts[2] + '/tasks?opt_fields=name,assignee,completed,tags', function(data) {
+					taskCompleted,
+					processCalculation = function(data) {
 						for (var i in data.data) {
 							if (data.data.hasOwnProperty(i)) {
 								task = data.data[i];
@@ -240,7 +156,7 @@ $(function() {
 									// Count section hours
 									section.hours[section.tempIndex] += hour;
 
-									// Detect tags count
+									// Calculate tag's count and hours
 									if (task.tags.length && hour > 0) {
 										for (var j in task.tags) {
 											if (task.tags.hasOwnProperty(j)) {
@@ -252,11 +168,12 @@ $(function() {
 										}
 									}
 
-									// Detect total completed hours
+									// Calculate total completed hours
 									if (taskCompleted) {
 										hours.completed += hour;
 									}
 
+									// Calculate total completed hours for each developer
 									if (taskAssignee !== null) {
 										if (users.hasOwnProperty(taskAssignee.id)) {
 											users[taskAssignee.id]['hours']['total'] += hour;
@@ -270,35 +187,38 @@ $(function() {
 							}
 						}
 
-						$totalHours.text(hours.total);
-						$completed.html(hours.completed);
-						$totalStories.text(stories.total);
-						$assigned.html(stories.assigned);
-						$estimated.html(stories.estimated);
+						// Draw statistics
+						$totals.find('.total').text(hours.total);
+						$totals.find('.completed').text(hours.completed);
 
-						$tagBug.text(tags.bug.count);
-						$tagCritical.text(tags.critical.count);
-						$tagDebt.text(tags.debt.count);
+						$totals.find('.estimated').text(stories.estimated);
+						$totals.find('.taken').text(stories.total);
+						$totals.find('.assigned').text(stories.assigned);
 
-						$tagHourBug.text(tags.bug.hours);
-						$tagHourCritical.text(tags.critical.hours);
-						$tagHourDebt.text(tags.debt.hours);
+						$tags.find('.tag-bug').text(tags.bug.count);
+						$tags.find('.tag-critical').text(tags.critical.count);
+						$tags.find('.tag-debt').text(tags.debt.count);
+
+						$tags.find('.tag-bug-hours').text(tags.bug.hours);
+						$tags.find('.tag-critical-hours').text(tags.critical.hours);
+						$tags.find('.tag-debt-hours').text(tags.debt.hours);
 
 						$sections.find('.block-strategic .point').text(section.hours.strategic);
 						$sections.find('.block-tactical .point').text(section.hours.tactical);
 						$sections.find('.block-maintenance .point').text(section.hours.maintenance);
 
-						for (var j in users) {
-							if (users.hasOwnProperty(j)) {
+						// Draw something cool
+						for (var o in users) {
+							if (users.hasOwnProperty(o)) {
 								$users.append(
-									'<a href="#" class="list-group-item" data-user-id="' + j + '">' +
-										'<img src="' + users[j]['image'] + '" width="21" height="21"> &nbsp; ' +
+									'<a href="#" class="list-group-item" data-user-id="' + o + '">' +
+										'<img src="' + users[o]['image'] + '" width="21" height="21"> &nbsp; ' +
 										'<span class="badge">' +
-											'<span class="taken text-success">' + users[j]['hours']['completed'] + '</span>' +
-											'<span class="done">' + users[j]['hours']['total'] + '</span>' +
+											'<span class="taken text-success">' + users[o]['hours']['completed'] + '</span>' +
+											'<span class="done">' + users[o]['hours']['total'] + '</span>' +
 										'</span>' +
-										'<input type="number" class="hide pull-right" step="1" min="0" max="40" value="' + userIdList[j] + '">' +
-										users[j]['name'] +
+										'<input type="number" class="hide pull-right" step="1" min="0" max="40" value="' + userIdList[o] + '">' +
+										users[o]['name'] +
 									'</a>'
 								);
 							}
@@ -308,8 +228,13 @@ $(function() {
 							$wrapper.hide().removeClass('hide').fadeIn('slow');
 						});
 
-						$totals.trigger('calculate');
-					}, "json");
+						$totals.trigger('calculateTotalHours');
+					};
+
+				if (parts.length > 2) {
+					$loader.removeClass('hide');
+
+					$.get('https://app.asana.com/api/1.0/projects/' + parts[2] + '/tasks?opt_fields=name,assignee,completed,tags', processCalculation, 'json');
 				} else {
 					$wrong.removeClass('hide');
 				}
@@ -327,6 +252,10 @@ $(function() {
 		var isActive = parseInt($(this).attr('data-is-active'));
 
 		$(this).attr('data-is-active', isActive ? 0 : 1);
+
+		if (isActive) {
+			$users.find('.list-group-item').removeClass('active');
+		}
 
 		$appliedFactor.trigger('apply', [isActive ? false : true]);
 	});
@@ -346,17 +275,21 @@ $(function() {
 			}
 		});
 
-		$totals.trigger('calculate');
+		$totals.trigger('calculateTotalHours');
 	});
 
 	$users.on('change, input', 'input', function() {
-		$totals.trigger('calculate');
+		$totals.trigger('calculateTotalHours');
 	});
 
 	$users.on('click', '.list-group-item', function(e) {
 		e.preventDefault();
 
-		if (e.target.tagName != 'INPUT') {
+		var isAppliedFactorActive = parseInt(
+			$appliedFactor.find('a').attr('data-is-active')
+		);
+
+		if (e.target.tagName != 'INPUT' && isAppliedFactorActive) {
 			$(this).toggleClass('active');
 		}
 	});
