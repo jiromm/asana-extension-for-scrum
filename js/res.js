@@ -68,6 +68,7 @@ var getLocation = function(href) {
 			}
 		}
 	},
+	defaultHours = 28,
 	admins = [10124585031830],
 	tagsIdList = {
 		1367012534094: 'bug',

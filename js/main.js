@@ -99,11 +99,20 @@ $(function() {
 		}
 	});
 
+	$(document).on('detectAdmin', function() {
+		if (admins.indexOf(
+			JSON.parse(localStorage.getItem('user')).id
+		) != -1) {
+			$appliedFactor.removeClass('hide');
+		}
+	});
+
 	$(document).on('processHandling', function() {
+		// Detect administrator
+		$(document).trigger('detectAdmin');
+
 		// Define totals
 		if (localStorage.getItem('appliedFactor') == undefined) {
-			var defaultHours = 28;
-
 			for (var userId in users) {
 				if (users.hasOwnProperty(userId) && userIdList.hasOwnProperty(userId)) {
 					userIdList[userId] = defaultHours;
@@ -308,7 +317,7 @@ $(function() {
 
 				$(document).trigger('processHandling');
 			} else {
-				// handle
+				// @todo handle unauthorized access
 			}
 		}, 'json');
 	});
