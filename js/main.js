@@ -1,3 +1,7 @@
+/**
+ * Native chrome object
+ * @typedef {object} chrome
+ */
 $(function() {
 	var userIdList = {},
 		$totals = $('.totals'),
