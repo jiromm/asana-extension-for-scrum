@@ -4,6 +4,12 @@ var getLocation = function(href) {
 
 		return l;
 	},
+	getUserInfoUrl = function() {
+		return 'https://app.asana.com/api/1.0/users/me';
+	},
+	getSprintUrl = function(sprintId) {
+		return 'https://app.asana.com/api/1.0/projects/' + sprintId + '/tasks?opt_fields=name,assignee,completed,tags';
+	},
 	users = {
 		10124585031848: {
 			"name": "Eduard Aleksanyan",
@@ -62,6 +68,7 @@ var getLocation = function(href) {
 			}
 		}
 	},
+	admins = [10124585031830],
 	tagsIdList = {
 		1367012534094: 'bug',
 		1379750807237: 'critical',
