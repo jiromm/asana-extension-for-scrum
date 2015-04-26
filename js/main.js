@@ -5,15 +5,176 @@
 $(function() {
 	var userIdList = {},
 		$totals = $('.totals'),
-
 		$tags = $('.tags'),
 		$sections = $('.sections'),
-
 		$users = $('.users'),
 		$wrapper = $('.wrapper'),
 		$appliedFactor = $('.applied-factor'),
 		$loader = $('.loader'),
-		$wrong = $('.wrong');
+		$wrong = $('.wrong'),
+
+		// Task related
+		needle = null,
+		tags = {
+			bug: {
+				count: 0,
+				hours: 0
+			},
+			critical: {
+				count: 0,
+				hours: 0
+			},
+			debt: {
+				count: 0,
+				hours: 0
+			}
+		},
+		hours = {
+			estimated: 0,
+			completed: 0,
+			total: 0
+		},
+		stories = {
+			estimated: 0,
+			assigned: 0,
+			total: 0
+		},
+		section = {
+			tempIndex: 'maintenance',
+			hours: {
+				strategic: 0,
+				tactical: 0,
+				maintenance: 0
+			}
+		},
+		hour,
+		task,
+		taskName,
+		taskAssignee,
+		taskCompleted,
+		getAppliedFactorData = function() {
+			var data = {};
+
+			$users.find('a').each(function() {
+				data[$(this).attr('data-user-id')] = $(this).find('input').val();
+			});
+
+			return data;
+		},
+		processCalculation = function(data) {
+			for (var i in data.data) {
+				if (data.data.hasOwnProperty(i)) {
+					task = data.data[i];
+					taskName = task.name;
+					taskAssignee = task.assignee;
+					taskCompleted = task.completed;
+
+					// Detect section
+					if (taskName.slice(-1) == ':') {
+						var taskSectionName = taskName.slice(0, -1).toLowerCase();
+
+						section.tempIndex = section.hours[taskSectionName] == undefined
+							? 'maintenance'
+							: taskSectionName;
+
+						continue;
+					}
+
+					// Detect estimated story
+					needle = /\[([\d\.]+)\]/.exec(data.data[i].name);
+					stories.total++;
+
+					// Detect assigned or not
+					if (taskAssignee) {
+						stories.assigned++;
+					}
+
+					// Calculate hours
+					if (needle !== null) {
+						hour = parseFloat(needle[1]);
+						hours.total += hour;
+						stories.estimated++;
+
+						// Count section hours
+						section.hours[section.tempIndex] += hour;
+
+						// Calculate tag's count and hours
+						if (task.tags.length && hour > 0) {
+							for (var j in task.tags) {
+								if (task.tags.hasOwnProperty(j)) {
+									if (tagsIdList[task.tags[j].id] != undefined) {
+										tags[tagsIdList[task.tags[j].id]].count++;
+										tags[tagsIdList[task.tags[j].id]].hours += hour;
+									}
+								}
+							}
+						}
+
+						// Calculate total completed hours
+						if (taskCompleted) {
+							hours.completed += hour;
+						}
+
+						// Calculate total completed hours for each developer
+						if (taskAssignee !== null) {
+							if (users.hasOwnProperty(taskAssignee.id)) {
+								users[taskAssignee.id]['hours']['total'] += hour;
+
+								if (taskCompleted) {
+									users[taskAssignee.id]['hours']['completed'] += hour;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// Draw statistics
+			$totals.find('.total').text(hours.total);
+			$totals.find('.completed').text(hours.completed);
+
+			$totals.find('.estimated').text(stories.estimated);
+			$totals.find('.taken').text(stories.total);
+			$totals.find('.assigned').text(stories.assigned);
+
+			$tags.find('.tag-bug').text(tags.bug.count);
+			$tags.find('.tag-critical').text(tags.critical.count);
+			$tags.find('.tag-debt').text(tags.debt.count);
+
+			$tags.find('.tag-bug-hours').text(tags.bug.hours);
+			$tags.find('.tag-critical-hours').text(tags.critical.hours);
+			$tags.find('.tag-debt-hours').text(tags.debt.hours);
+
+			$sections.find('.block-strategic .point').text(section.hours.strategic);
+			$sections.find('.block-tactical .point').text(section.hours.tactical);
+			$sections.find('.block-maintenance .point').text(section.hours.maintenance);
+
+			// Draw something cool
+			for (var o in users) {
+				if (users.hasOwnProperty(o)) {
+					$users.append(
+						'<a href="#" class="list-group-item" data-user-id="' + o + '">' +
+							'<img src="' + users[o]['image'] + '" width="21" height="21"> &nbsp; ' +
+							'<span class="badge">' +
+								'<span class="taken text-success">' + users[o]['hours']['completed'] + '</span>' +
+								'<span class="done">' + users[o]['hours']['total'] + '</span>' +
+							'</span>' +
+							'<input type="number" class="hide pull-right" step="1" min="0" max="40" value="' + userIdList[o] + '">' +
+							users[o]['name'] +
+						'</a>'
+					);
+				}
+			}
+
+			$loader.fadeOut('fast', function() {
+				$wrapper.hide().removeClass('hide').fadeIn('slow');
+			});
+
+			$totals.trigger('calculateTotalHours');
+		};
+
+	// Cleanup
+	localStorage.removeItem('appliedFactor');
 
 	// Calculate total hours
 	$totals.on('calculateTotalHours', function() {
@@ -33,12 +194,12 @@ $(function() {
 	});
 
 	// Enable/disable applied factor
-	$appliedFactor.on('apply', function(e, isApplied) {
+	$appliedFactor.on('apply', function(e, isApplied, passiveMode) {
 		if (isApplied) {
 			$users.find('input').hide().removeClass('hide').fadeIn('fast');
 			$users.find('.badge').hide();
 
-			$(this).find('a').text('Close');
+			$(this).find('a').text('Save');
 			$(this).find('input').fadeIn('fast', function() {
 				$(this).focus()
 			});
@@ -48,6 +209,23 @@ $(function() {
 
 			$(this).find('input').hide();
 			$(this).find('a').text('Applied Factor');
+
+			if (passiveMode === true) {
+				$.post(getSprintDBUrl(sessionStorage.getItem('sprintId')), {data: getAppliedFactorData()})
+					.done(function(data) {
+						if (data.status == 'success') {
+							console.log('SUCCESS! Successfully saved.');
+						} else {
+							console.log('ERROR! Something went wrong.');
+						}
+					})
+					.fail(function() {
+						console.log('ERROR! Connection Error.');
+					})
+					.always(function() {
+						$appliedFactor.find('a').prop('disabled', false);
+					});
+			}
 		}
 	});
 
@@ -62,7 +240,8 @@ $(function() {
 			$users.find('.list-group-item').removeClass('active');
 		}
 
-		$appliedFactor.trigger('apply', [isActive ? false : true]);
+		$(this).prop('disabled', true);
+		$appliedFactor.trigger('apply', [isActive ? false : true, true]);
 	});
 
 	$appliedFactor.find('input').on('change, input', function() {
@@ -107,31 +286,36 @@ $(function() {
 		}
 	});
 
-	$(document).on('processHandling', function() {
-		// Detect administrator
-		$(document).trigger('detectAdmin');
+	$(document).on('processCalculation', function(e, sprintId, isApplied, data) {
+		var userId;
 
-		// Define totals
-		if (localStorage.getItem('appliedFactor') == undefined) {
-			for (var userId in users) {
-				if (users.hasOwnProperty(userId) && userIdList.hasOwnProperty(userId)) {
-					userIdList[userId] = defaultHours;
+		if (isApplied) {
+			userIdList = data;
+
+			// @todo detect value in a smart way
+			$appliedFactor.find('input').val(28);
+		} else {
+			for (userId in users) {
+				if (users.hasOwnProperty(userId)) {
+					userIdList[userId] = 0;
 				}
 			}
 
-			localStorage.setItem('appliedFactor', JSON.stringify(userIdList));
-			localStorage.setItem('defaultHour', defaultHours);
-			$appliedFactor.find('input').val(defaultHours);
-		} else {
-			$appliedFactor.find('input').val(
-				localStorage.getItem('defaultHour')
-			);
+			$appliedFactor.find('input').val(0);
 		}
 
-		// Get user's id list
-		userIdList = JSON.parse(
-			localStorage.getItem('appliedFactor')
-		);
+		$.get(getSprintUrl(sprintId), processCalculation, 'json');
+	});
+
+	$(document).on('prepareAppliedFactor', function(e, sprintId) {
+		$.get(getSprintDBUrl(sprintId), function(data) {
+			$(document).trigger('processCalculation', [sprintId, data.isApplied, data.data]);
+		}, 'json');
+	});
+
+	$(document).on('processHandling', function() {
+		// Detect administrator
+		$(document).trigger('detectAdmin');
 
 		// Apply default settings for applied factor
 		$appliedFactor.trigger('apply', [false]);
@@ -144,168 +328,23 @@ $(function() {
 
 				if (url.hostname == 'app.asana.com') {
 					var pathname = url.pathname,
-						parts = pathname.split('/'),
-						needle = null,
-						tags = {
-							bug: {
-								count: 0,
-								hours: 0
-							},
-							critical: {
-								count: 0,
-								hours: 0
-							},
-							debt: {
-								count: 0,
-								hours: 0
-							}
-						},
-						hours = {
-							estimated: 0,
-							completed: 0,
-							total: 0
-						},
-						stories = {
-							estimated: 0,
-							assigned: 0,
-							total: 0
-						},
-						section = {
-							tempIndex: 'maintenance',
-							hours: {
-								strategic: 0,
-								tactical: 0,
-								maintenance: 0
-							}
-						},
-						hour,
-						task,
-						taskName,
-						taskAssignee,
-						taskCompleted,
-						processCalculation = function(data) {
-							for (var i in data.data) {
-								if (data.data.hasOwnProperty(i)) {
-									task = data.data[i];
-									taskName = task.name;
-									taskAssignee = task.assignee;
-									taskCompleted = task.completed;
-
-									// Detect section
-									if (taskName.slice(-1) == ':') {
-										var taskSectionName = taskName.slice(0, -1).toLowerCase();
-
-										section.tempIndex = section.hours[taskSectionName] == undefined
-											? 'maintenance'
-											: taskSectionName;
-
-										continue;
-									}
-
-									// Detect estimated story
-									needle = /\[([\d\.]+)\]/.exec(data.data[i].name);
-									stories.total++;
-
-									// Detect assigned or not
-									if (taskAssignee) {
-										stories.assigned++;
-									}
-
-									// Calculate hours
-									if (needle !== null) {
-										hour = parseFloat(needle[1]);
-										hours.total += hour;
-										stories.estimated++;
-
-										// Count section hours
-										section.hours[section.tempIndex] += hour;
-
-										// Calculate tag's count and hours
-										if (task.tags.length && hour > 0) {
-											for (var j in task.tags) {
-												if (task.tags.hasOwnProperty(j)) {
-													if (tagsIdList[task.tags[j].id] != undefined) {
-														tags[tagsIdList[task.tags[j].id]].count++;
-														tags[tagsIdList[task.tags[j].id]].hours += hour;
-													}
-												}
-											}
-										}
-
-										// Calculate total completed hours
-										if (taskCompleted) {
-											hours.completed += hour;
-										}
-
-										// Calculate total completed hours for each developer
-										if (taskAssignee !== null) {
-											if (users.hasOwnProperty(taskAssignee.id)) {
-												users[taskAssignee.id]['hours']['total'] += hour;
-
-												if (taskCompleted) {
-													users[taskAssignee.id]['hours']['completed'] += hour;
-												}
-											}
-										}
-									}
-								}
-							}
-
-							// Draw statistics
-							$totals.find('.total').text(hours.total);
-							$totals.find('.completed').text(hours.completed);
-
-							$totals.find('.estimated').text(stories.estimated);
-							$totals.find('.taken').text(stories.total);
-							$totals.find('.assigned').text(stories.assigned);
-
-							$tags.find('.tag-bug').text(tags.bug.count);
-							$tags.find('.tag-critical').text(tags.critical.count);
-							$tags.find('.tag-debt').text(tags.debt.count);
-
-							$tags.find('.tag-bug-hours').text(tags.bug.hours);
-							$tags.find('.tag-critical-hours').text(tags.critical.hours);
-							$tags.find('.tag-debt-hours').text(tags.debt.hours);
-
-							$sections.find('.block-strategic .point').text(section.hours.strategic);
-							$sections.find('.block-tactical .point').text(section.hours.tactical);
-							$sections.find('.block-maintenance .point').text(section.hours.maintenance);
-
-							// Draw something cool
-							for (var o in users) {
-								if (users.hasOwnProperty(o)) {
-									$users.append(
-										'<a href="#" class="list-group-item" data-user-id="' + o + '">' +
-											'<img src="' + users[o]['image'] + '" width="21" height="21"> &nbsp; ' +
-											'<span class="badge">' +
-											'<span class="taken text-success">' + users[o]['hours']['completed'] + '</span>' +
-											'<span class="done">' + users[o]['hours']['total'] + '</span>' +
-											'</span>' +
-											'<input type="number" class="hide pull-right" step="1" min="0" max="40" value="' + userIdList[o] + '">' +
-											users[o]['name'] +
-											'</a>'
-									);
-								}
-							}
-
-							$loader.fadeOut('fast', function() {
-								$wrapper.hide().removeClass('hide').fadeIn('slow');
-							});
-
-							$totals.trigger('calculateTotalHours');
-						};
+						parts = pathname.split('/');
 
 					if (parts.length > 2) {
-						$.get(getSprintUrl(parts[2]), processCalculation, 'json');
+						sessionStorage.setItem('sprintId', parts[2]);
+						$(document).trigger('prepareAppliedFactor', [parts[2]]);
 					} else {
 						$wrong.removeClass('hide');
+						$loader.addClass('hide');
 					}
 				} else {
 					$wrong.removeClass('hide');
+					$loader.addClass('hide');
 				}
 			});
 		} else {
 			$wrong.removeClass('hide');
+			$loader.addClass('hide');
 		}
 	});
 

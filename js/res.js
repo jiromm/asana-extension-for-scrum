@@ -10,6 +10,9 @@ var getLocation = function(href) {
 	getSprintUrl = function(sprintId) {
 		return 'https://app.asana.com/api/1.0/projects/' + sprintId + '/tasks?opt_fields=name,assignee,completed,tags';
 	},
+	getSprintDBUrl = function(sprintId) {
+		return 'http://jiromm.com/projects/chrome/asana/db/?id=' + sprintId;
+	},
 	users = {
 		10124585031848: {
 			"name": "Eduard Aleksanyan",
@@ -68,8 +71,7 @@ var getLocation = function(href) {
 			}
 		}
 	},
-	defaultHours = 28,
-	admins = [10124585031830],
+	admins = [8430834800772, 26433177772854],
 	tagsIdList = {
 		1367012534094: 'bug',
 		1379750807237: 'critical',
