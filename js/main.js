@@ -11,6 +11,7 @@ $(function() {
 		$wrapper = $('.wrapper'),
 		$appliedFactor = $('.applied-factor'),
 		$loader = $('.loader'),
+		$status = $('.status'),
 		$wrong = $('.wrong'),
 
 		// Task related
@@ -62,6 +63,8 @@ $(function() {
 			return data;
 		},
 		processCalculation = function(data) {
+			$status.text('Calculating totals.');
+
 			for (var i in data.data) {
 				if (data.data.hasOwnProperty(i)) {
 					task = data.data[i];
@@ -170,7 +173,10 @@ $(function() {
 				$wrapper.hide().removeClass('hide').fadeIn('slow');
 			});
 
-			$totals.trigger('calculateTotalHours');
+			setTimeout(function() {
+				$totals.trigger('calculateTotalHours');
+				$status.addClass('hide');
+			}, 500);
 		};
 
 	// Cleanup
@@ -308,12 +314,16 @@ $(function() {
 	});
 
 	$(document).on('prepareAppliedFactor', function(e, sprintId) {
+		$status.text('Applied factor defaults.');
 		$.get(getSprintDBUrl(sprintId), function(data) {
+			$status.text('Process calculation...');
 			$(document).trigger('processCalculation', [sprintId, data.isApplied, data.data]);
 		}, 'json');
 	});
 
 	$(document).on('processHandling', function() {
+		$status.text('Initialization.');
+
 		// Detect administrator
 		$(document).trigger('detectAdmin');
 
@@ -336,15 +346,18 @@ $(function() {
 					} else {
 						$wrong.removeClass('hide');
 						$loader.addClass('hide');
+						$status.addClass('hide');
 					}
 				} else {
 					$wrong.removeClass('hide');
 					$loader.addClass('hide');
+					$status.addClass('hide');
 				}
 			});
 		} else {
 			$wrong.removeClass('hide');
 			$loader.addClass('hide');
+			$status.addClass('hide');
 		}
 	});
 

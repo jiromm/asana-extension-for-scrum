@@ -9,6 +9,15 @@ h2 {
 	min-height: 230px;
 	position: relative;
 }
+.status {
+	position: absolute;
+	bottom: 2px;
+	color: #888;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	font-size: 10px;
+}
 .tags .btn,
 .sections .btn {
 	width: 151px;
