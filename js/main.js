@@ -363,15 +363,17 @@ $(function() {
 
 	// Detect admins
 	$(document).on('getUserInfo', function() {
-		$.get(getUserInfoUrl(), function(data) {
-			if (data.error == undefined) {
-				localStorage.setItem('user', JSON.stringify(data.data));
+		if (typeof getUserInfoUrl !== 'undefined') {
+			$.get(getUserInfoUrl(), function(data) {
+				if (data.error == undefined) {
+					localStorage.setItem('user', JSON.stringify(data.data));
 
-				$(document).trigger('processHandling');
-			} else {
-				// @todo handle unauthorized access
-			}
-		}, 'json');
+					$(document).trigger('processHandling');
+				} else {
+					// @todo handle unauthorized access
+				}
+			}, 'json');
+		}
 	});
 
 	// Entry point
