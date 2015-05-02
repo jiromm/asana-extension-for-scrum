@@ -4,6 +4,8 @@
  */
 $(function() {
 	var userIdList = {},
+		testingQueue = buildTestingQueue(),
+
 		$totals = $('.totals'),
 		$tags = $('.tags'),
 		$sections = $('.sections'),
@@ -164,6 +166,7 @@ $(function() {
 							'</span>' +
 							'<input type="number" class="hide pull-right" step="1" min="0" max="40" value="' + userIdList[o] + '">' +
 							users[o]['name'] +
+							' <i class="glyphicon glyphicon-random text-danger" data-content="<u>' + users[testingQueue[o][0]]['name'] + ', ' + users[testingQueue[o][1]]['name'] + '</u>"></i>' +
 						'</a>'
 					);
 				}
@@ -174,6 +177,12 @@ $(function() {
 			});
 
 			setTimeout(function() {
+				$('.list-group-item .glyphicon').popover({
+					placement: 'top',
+					trigger: 'hover',
+					html: true
+				});
+
 				$totals.trigger('calculateTotalHours');
 				$status.addClass('hide');
 			}, 500);

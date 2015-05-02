@@ -121,6 +121,16 @@ span.taken {
 .btn-group .btn {
 	font-weight: normal;
 }
+.list-group-item .glyphicon {
+	display: none;
+}
+.list-group-item:hover .glyphicon {
+	display: inline-block;
+}
+.list-group-item u {
+	font-size: 12px;
+	text-decoration: none;
+}
 
 
 .loader,
