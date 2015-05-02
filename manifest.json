@@ -21,15 +21,5 @@
 		"tabs",
 		"storage",
 		"*://*/"
-	],
-
-	"content_scripts": [
-		{
-			"matches": ["https://*/*"],
-			"js": [
-				"js/vendor/jquery-1.11.2.min.js",
-				"js/main.js"
-			]
-		}
 	]
 }
