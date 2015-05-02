@@ -113,7 +113,6 @@ var getLocation = function(href) {
 			if (i2 == j || i2 == i1) i2++;
 
 			iteration[testers[j].id] = [testers[i1].id, testers[i2].id];
-			testers[j].step++;
 		}
 
 		return iteration;
