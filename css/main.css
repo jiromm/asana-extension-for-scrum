@@ -28,10 +28,8 @@ h2 {
 	width: 150px;
 }
 .tag-hour:before {
-	content: '[';
-}
-.tag-hour:after {
-	content: ']';
+	content: ' / ';
+	color: #ccc;
 }
 .totals {
 	text-shadow: 1px 1px 0 rgba(255, 255, 255, .6);
@@ -84,6 +82,9 @@ h2 {
 }
 .top3 {
 	margin-top: -3px;
+}
+.statistics-group h4 {
+	margin-top: 0;
 }
 .statistics-group .btn-group .btn {
 	border-radius: 0;
