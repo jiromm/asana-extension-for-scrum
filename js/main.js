@@ -3,8 +3,7 @@
  * @typedef {object} chrome
  */
 $(function() {
-	var userIdList = {},
-		testingQueue = buildTestingQueue(),
+	var testingQueue = buildTestingQueue(),
 
 		$totals = $('.totals'),
 		$tags = $('.tags'),
@@ -161,10 +160,11 @@ $(function() {
 						'<a href="#" class="list-group-item" data-user-id="' + o + '">' +
 							'<img src="' + users[o]['image'] + '" width="21" height="21"> &nbsp; ' +
 							'<span class="badge">' +
-								'<span class="taken text-success">' + users[o]['hours']['completed'] + '</span>' +
-								'<span class="done">' + users[o]['hours']['total'] + '</span>' +
+								'<span class="done delim text-success">' + users[o].hours.completed + '</span>' +
+								'<span class="taken delim">' + users[o].hours.total + '</span>' +
+								'<span class="possible text-warning">' + users[o].hours.possible + '</span>' +
 							'</span>' +
-							'<input type="number" class="hide pull-right" step="1" min="0" max="40" value="' + userIdList[o] + '">' +
+							'<input type="number" class="hide pull-right" step="1" min="0" max="40" value="' + users[o].hours.possible + '">' +
 							users[o]['name'] +
 							' <i class="glyphicon glyphicon-random text-danger" data-content="<u>' + users[testingQueue[o][0]]['name'] + ', ' + users[testingQueue[o][1]]['name'] + '</u>"></i>' +
 						'</a>'
@@ -188,9 +188,6 @@ $(function() {
 			}, 500);
 		};
 
-	// Cleanup
-	localStorage.removeItem('appliedFactor');
-
 	// Calculate total hours
 	$totals.on('calculateTotalHours', function() {
 		var total = 0;
@@ -199,12 +196,10 @@ $(function() {
 			var userId = parseInt($(this).closest('.list-group-item').attr('data-user-id')),
 				userHour = parseInt($(this).val());
 
-			userIdList[userId] = userHour;
+			users[userId].hours.possible = userHour;
 			total += userHour;
 		});
 
-		localStorage.setItem('appliedFactor', JSON.stringify(userIdList));
-		localStorage.setItem('defaultHour', parseInt($appliedFactor.find('input').val()));
 		$totals.find('.possible').text(isNaN(total) ? 0 : total);
 	});
 
@@ -302,17 +297,23 @@ $(function() {
 	});
 
 	$(document).on('processCalculation', function(e, sprintId, isApplied, data) {
-		var userId;
+		var userId,
+			maxHour = 0;
 
 		if (isApplied) {
-			userIdList = data;
+			for (userId in data) {
+				if (data.hasOwnProperty(userId)) {
+					users[userId].hours.possible = data[userId];
+					maxHour = parseInt(data[userId]) > maxHour ? parseInt(data[userId]) : maxHour;
+				}
+			}
 
 			// @todo detect value in a smart way
-			$appliedFactor.find('input').val(28);
+			$appliedFactor.find('input').val(maxHour);
 		} else {
 			for (userId in users) {
 				if (users.hasOwnProperty(userId)) {
-					userIdList[userId] = 0;
+					users[userId].hours.possible = 0;
 				}
 			}
 

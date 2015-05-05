@@ -51,13 +51,6 @@ h2 {
 .totals h4 {
 	margin-bottom: -10px;
 }
-.delim:after {
-	content: "/";
-	position: absolute;
-	right: 0;
-	top: 21px;
-	color: #ccc;
-}
 .applied-factor {
 	margin-top: -15px;
 	height: 26px;
@@ -101,23 +94,22 @@ h2 {
 .statistics-group .right-bottom {
 	border-bottom-right-radius: 4px !important;
 }
+.statistics-group .delim:after {
+	content: "/";
+	position: absolute;
+	right: 0;
+	top: 21px;
+	color: #ccc;
+}
 .text-muted .btn {
 	color: #888 !important;
 }
 .users .badge {
 	color: #444;
 	background: transparent;
-	font-size: 16px;
+	font-size: 14px;
+	font-weight: normal;
 	margin-right: -7px;
-}
-span.taken:after {
-	content: "/";
-	padding-left: 10px;
-	color: #aaa;
-}
-span.taken {
-	margin-right: 10px;
-	font-size: 12px;
 }
 .btn-group .btn {
 	font-weight: normal;
@@ -131,6 +123,11 @@ span.taken {
 .list-group-item u {
 	font-size: 12px;
 	text-decoration: none;
+}
+.list-group-item .delim:after {
+	content: "/";
+	margin: 10px;
+	color: #ccc;
 }
 
 

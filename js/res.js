@@ -24,7 +24,8 @@ var getLocation = function(href) {
 			"image": "https://s3.amazonaws.com/profile_photos/10124585031848.wyUMUWeGEyfd7bXATcGa_21x21.png",
 			"hours": {
 				"total": 0,
-				"completed": 0
+				"completed": 0,
+				"possible": 0
 			}
 		},
 		11686527531417: {
@@ -32,7 +33,8 @@ var getLocation = function(href) {
 			"image": "https://s3.amazonaws.com/profile_photos/11686527531417.QOvoSX7R6lTJSG9VDBQI_21x21.png",
 			"hours": {
 				"total": 0,
-				"completed": 0
+				"completed": 0,
+				"possible": 0
 			}
 		},
 		10124585031839: {
@@ -40,7 +42,8 @@ var getLocation = function(href) {
 			"image": "https://s3.amazonaws.com/profile_photos/10124585031839.Zvk5gKoGkI4BZNXFeAG7_21x21.png",
 			"hours": {
 				"total": 0,
-				"completed": 0
+				"completed": 0,
+				"possible": 0
 			}
 		},
 		5754650264628: {
@@ -48,7 +51,8 @@ var getLocation = function(href) {
 			"image": "https://s3.amazonaws.com/profile_photos/5754650264628.J6jyaDiKxliFxx4kIpiU_21x21.png",
 			"hours": {
 				"total": 0,
-				"completed": 0
+				"completed": 0,
+				"possible": 0
 			}
 		},
 		25719136431202: {
@@ -56,7 +60,8 @@ var getLocation = function(href) {
 			"image": "https://s3.amazonaws.com/profile_photos/25719136431202.G39up5gCwyUO8Lg5UhBL_21x21.png",
 			"hours": {
 				"total": 0,
-				"completed": 0
+				"completed": 0,
+				"possible": 0
 			}
 		},
 		12950252745597: {
@@ -64,7 +69,8 @@ var getLocation = function(href) {
 			"image": "https://s3.amazonaws.com/profile_photos/12950252745597.xddYtxsUKBXFP4oYLpSF_21x21.png",
 			"hours": {
 				"total": 0,
-				"completed": 0
+				"completed": 0,
+				"possible": 0
 			}
 		},
 		10124585031830: {
@@ -72,7 +78,8 @@ var getLocation = function(href) {
 			"image": "https://s3.amazonaws.com/profile_photos/10124585031830.JrvDk4UBi3WC0VX8vMT7_21x21.png",
 			"hours": {
 				"total": 0,
-				"completed": 0
+				"completed": 0,
+				"possible": 0
 			}
 		}
 	},
@@ -85,7 +92,7 @@ var getLocation = function(href) {
 		{id: 5754650264628,  step: 1}, // Tigran Tadevosyan
 		{id: 11686527531417, step: 1}  // Tigran Ghabuzyan
 	],
-	admins = [8430834800772, 26433177772854],
+	admins = [8430834800772, 26433177772854, 10124585031830],
 	tagsIdList = {
 		1367012534094:  'bug',
 		1379750807237:  'critical',
