@@ -51,12 +51,16 @@ h2 {
 .totals h4 {
 	margin-bottom: -10px;
 }
-.applied-factor {
+.footer-statistics {
 	margin-top: -15px;
 	height: 26px;
 }
 .applied-factor input {
 	margin-right: 8px;
+}
+.team-power {
+	font-size: 12px;
+	text-transform: uppercase;
 }
 .users input {
 	margin: -2px -8px 0 0;

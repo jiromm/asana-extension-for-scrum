@@ -11,6 +11,7 @@ $(function() {
 		$users = $('.users'),
 		$wrapper = $('.wrapper'),
 		$appliedFactor = $('.applied-factor'),
+		$teamPower = $('.team-power strong'),
 		$loader = $('.loader'),
 		$status = $('.status'),
 		$wrong = $('.wrong'),
@@ -188,6 +189,29 @@ $(function() {
 			}, 500);
 		};
 
+	// Calculate team power
+	$totals.on('calculateTeamPower', function() {
+		var teamPower = 0,
+			maxHour = 0,
+			userId;
+
+		for (userId in users) {
+			if (users.hasOwnProperty(userId)) {
+				maxHour = (users[userId].hours.possible > maxHour ? users[userId].hours.possible : maxHour);
+			}
+		}
+
+		for (userId in users) {
+			if (users.hasOwnProperty(userId)) {
+				teamPower += users[userId].hours.possible / maxHour;
+			}
+		}
+
+		$teamPower.text(
+			teamPower.toFixed(2) + ' FTE'
+		);
+	});
+
 	// Calculate total hours
 	$totals.on('calculateTotalHours', function() {
 		var total = 0;
@@ -201,6 +225,7 @@ $(function() {
 		});
 
 		$totals.find('.possible').text(isNaN(total) ? 0 : total);
+		$totals.trigger('calculateTeamPower');
 	});
 
 	// Enable/disable applied factor
