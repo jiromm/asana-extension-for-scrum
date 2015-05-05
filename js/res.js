@@ -82,13 +82,13 @@ var getLocation = function(href) {
 		{id: 10124585031848, step: 1}, // Eduard Aleksanyan
 		{id: 25719136431202, step: 1}, // Hrayr Papikyan
 		{id: 10124585031839, step: 1}, // Tigran Petrosyan
-		{id: 5754650264628, step: 1}, // Tigran Tadevosyan
-		{id: 11686527531417, step: 1} // Tigran Ghabuzyan
+		{id: 5754650264628,  step: 1}, // Tigran Tadevosyan
+		{id: 11686527531417, step: 1}  // Tigran Ghabuzyan
 	],
 	admins = [8430834800772, 26433177772854],
 	tagsIdList = {
-		1367012534094: 'bug',
-		1379750807237: 'critical',
+		1367012534094:  'bug',
+		1379750807237:  'critical',
 		29189199083474: 'debt'
 	}
 	buildTestingQueue = function(weekNumber) {
@@ -103,16 +103,18 @@ var getLocation = function(href) {
 		});
 
 		for (var j in testers) {
-			step = parseInt(testers[j].step);
-			i1 = step + parseInt(j);
-			i2 = step + parseInt(j) + 1;
+			if (testers.hasOwnProperty(j)) {
+				step = parseInt(testers[j].step);
+				i1 = step + parseInt(j);
+				i2 = step + parseInt(j) + 1;
 
-			if (i1 > len) i1 = i1 - parseInt(i1 / len) * len;
-			if (i2 > len) i2 = i2 - parseInt(i2 / len) * len;
-			if (i1 == j) i1++;
-			if (i2 == j || i2 == i1) i2++;
+				if (i1 > len) i1 = i1 - parseInt(i1 / len) * len;
+				if (i2 > len) i2 = i2 - parseInt(i2 / len) * len;
+				if (i1 == j) i1++;
+				if (i2 == j || i2 == i1) i2++;
 
-			iteration[testers[j].id] = [testers[i1].id, testers[i2].id];
+				iteration[testers[j].id] = [testers[i1].id, testers[i2].id];
+			}
 		}
 
 		return iteration;
