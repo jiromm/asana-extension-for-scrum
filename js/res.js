@@ -92,18 +92,18 @@ var getLocation = function(href) {
 		{id: 5754650264628,  step: 1}, // Tigran Tadevosyan
 		{id: 11686527531417, step: 1}  // Tigran Ghabuzyan
 	],
-	admins = [8430834800772, 26433177772854, 10124585031830],
+	admins = [8430834800772, 26433177772854],
 	tagsIdList = {
 		1367012534094:  'bug',
 		1379750807237:  'critical',
 		29189199083474: 'debt'
 	}
-	buildTestingQueue = function(weekNumber) {
+	buildTestingQueue = function() {
 		var iteration = {},
 			i1, i2,
 			step,
 			len = testers.length - 1,
-			fixedWeek = weekNumber || (new Date()).getWeek();
+			fixedWeek = (new Date()).getWeek() + 1;
 
 		testers.forEach(function(item, index) {
 			testers[index].step = fixedWeek;

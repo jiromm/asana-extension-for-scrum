@@ -207,6 +207,10 @@ $(function() {
 			}
 		}
 
+		if (isNaN(teamPower)) {
+			teamPower = 0;
+		}
+
 		$teamPower.text(
 			teamPower.toFixed(2) + ' FTE'
 		);
