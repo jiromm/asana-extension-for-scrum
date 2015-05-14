@@ -191,24 +191,16 @@ $(function() {
 
 	// Calculate team power
 	$totals.on('calculateTeamPower', function() {
-		var teamPower = 0,
-			maxHour = 0,
-			userId;
+		var teamPower = 0;
 
-		for (userId in users) {
+		for (var userId in users) {
 			if (users.hasOwnProperty(userId)) {
-				maxHour = (users[userId].hours.possible > maxHour ? users[userId].hours.possible : maxHour);
-			}
-		}
+				if (!users[userId].hours.possible) {
+					continue
+				}
 
-		for (userId in users) {
-			if (users.hasOwnProperty(userId)) {
-				teamPower += users[userId].hours.possible / maxHour;
+				teamPower += users[userId].hours.possible / 28;
 			}
-		}
-
-		if (isNaN(teamPower)) {
-			teamPower = 0;
 		}
 
 		$teamPower.text(
