@@ -100,10 +100,28 @@ var getLocation = function(href) {
 	}
 	buildTestingQueue = function() {
 		var iteration = {},
-			i1, i2,
+			i1,
 			step,
-			len = testers.length - 1,
-			fixedWeek = (new Date()).getWeek() + 1;
+			len = testers.length,
+			fixedWeek = (new Date()).getWeek();
+
+		function getNext(firstUserIndex, testerIndex, len) {
+			var secondUserIndex = firstUserIndex + 1;
+
+			if (secondUserIndex == testerIndex) {
+				secondUserIndex ++;
+			}
+
+			if (secondUserIndex == len) {
+				if (testerIndex == 0) {
+					secondUserIndex = 1;
+				} else {
+					secondUserIndex = 0;
+				}
+			}
+
+			return secondUserIndex;
+		}
 
 		testers.forEach(function(item, index) {
 			testers[index].step = fixedWeek;
@@ -113,14 +131,18 @@ var getLocation = function(href) {
 			if (testers.hasOwnProperty(j)) {
 				step = parseInt(testers[j].step);
 				i1 = step + parseInt(j);
-				i2 = step + parseInt(j) + 1;
 
-				if (i1 > len) i1 = i1 - parseInt(i1 / len) * len;
-				if (i2 > len) i2 = i2 - parseInt(i2 / len) * len;
-				if (i1 == j) i1++;
-				if (i2 == j || i2 == i1) i2++;
+				i1 = i1 - parseInt(i1 / len) * len;
 
-				iteration[testers[j].id] = [testers[i1].id, testers[i2].id];
+				if (i1 == j) {
+					if (j == len - 1) {
+						i1 = 0;
+					} else {
+						i1++;
+					}
+				}
+
+				iteration[testers[j].id] = [testers[i1].id, testers[getNext(i1, j, len)].id];
 			}
 		}
 
