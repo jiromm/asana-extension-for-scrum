@@ -92,7 +92,7 @@ var getLocation = function(href) {
 		{id: 5754650264628,  step: 1}, // Tigran Tadevosyan
 		{id: 11686527531417, step: 1}  // Tigran Ghabuzyan
 	],
-	admins = [8430834800772, 26433177772854],
+	admins = [8430834800772, 26433177772854, 10124585031830],
 	tagsIdList = {
 		1367012534094:  'bug',
 		1379750807237:  'critical',

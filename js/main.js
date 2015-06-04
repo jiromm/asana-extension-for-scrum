@@ -246,6 +246,12 @@ $(function() {
 					.done(function(data) {
 						if (data.status == 'success') {
 							console.log('SUCCESS! Successfully saved.');
+
+							$users.find('a').each(function() {
+								var userId = $(this).attr('data-user-id');
+
+								$(this).find('.possible').text(data.hours[userId]);
+							});
 						} else {
 							console.log('ERROR! Something went wrong.');
 						}
