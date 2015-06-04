@@ -103,25 +103,24 @@ var getLocation = function(href) {
 			i1,
 			step,
 			len = testers.length,
-			fixedWeek = (new Date()).getWeek();
+			fixedWeek = (new Date()).getWeek() + 1,
+			getNext = function(firstUserIndex, testerIndex, len) {
+				var secondUserIndex = firstUserIndex + 1;
 
-		function getNext(firstUserIndex, testerIndex, len) {
-			var secondUserIndex = firstUserIndex + 1;
-
-			if (secondUserIndex == testerIndex) {
-				secondUserIndex ++;
-			}
-
-			if (secondUserIndex == len) {
-				if (testerIndex == 0) {
-					secondUserIndex = 1;
-				} else {
-					secondUserIndex = 0;
+				if (secondUserIndex == testerIndex) {
+					secondUserIndex ++;
 				}
-			}
 
-			return secondUserIndex;
-		}
+				if (secondUserIndex == len) {
+					if (testerIndex == 0) {
+						secondUserIndex = 1;
+					} else {
+						secondUserIndex = 0;
+					}
+				}
+
+				return secondUserIndex;
+			};
 
 		testers.forEach(function(item, index) {
 			testers[index].step = fixedWeek;
