@@ -13,7 +13,7 @@ var getLocation = function(href) {
 		return 'https://app.asana.com/api/1.0/users/me';
 	},
 	getSprintUrl = function(sprintId) {
-		return 'https://app.asana.com/api/1.0/projects/' + sprintId + '/tasks?opt_fields=name,assignee,completed,tags';
+		return 'https://app.asana.com/api/1.0/projects/' + sprintId + '/tasks?opt_fields=name,assignee,completed,tags,followers';
 	},
 	getSprintDBUrl = function(sprintId) {
 		return 'http://jiromm.com/projects/chrome/asana/db/?id=' + sprintId;
@@ -92,7 +92,7 @@ var getLocation = function(href) {
 		{id: 5754650264628,  step: 1}, // Tigran Tadevosyan
 		{id: 11686527531417, step: 1}  // Tigran Ghabuzyan
 	],
-	admins = [8430834800772, 26433177772854, 10124585031830],
+	admins = [8430834800772, 26433177772854/*, 10124585031830*/],
 	tagsIdList = {
 		1367012534094:  'bug',
 		1379750807237:  'critical',

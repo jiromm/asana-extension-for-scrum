@@ -103,30 +103,47 @@ $(function() {
 						// Count section hours
 						section.hours[section.tempIndex] += hour;
 
-						// Calculate tag's count and hours
-						if (task.tags.length && hour > 0) {
-							for (var j in task.tags) {
-								if (task.tags.hasOwnProperty(j)) {
-									if (tagsIdList[task.tags[j].id] != undefined) {
-										tags[tagsIdList[task.tags[j].id]].count++;
-										tags[tagsIdList[task.tags[j].id]].hours += hour;
+						// Detect discussion
+						needle = /^discussion:\s/i.exec(data.data[i].name);
+
+						if (needle !== null) {
+							if (task.followers.length && hour > 0) {
+								for (var k in task.followers) {
+									if (task.followers.hasOwnProperty(k)) {
+										users[task.followers[k].id]['hours']['total'] += hour / task.followers.length;
+
+										if (taskCompleted) {
+											users[task.followers[k].id]['hours']['completed'] += hour / task.followers.length;
+										}
 									}
 								}
 							}
-						}
+						} else {
+							// Calculate tag's count and hours
+							if (task.tags.length && hour > 0) {
+								for (var j in task.tags) {
+									if (task.tags.hasOwnProperty(j)) {
+										if (tagsIdList[task.tags[j].id] != undefined) {
+											tags[tagsIdList[task.tags[j].id]].count++;
+											tags[tagsIdList[task.tags[j].id]].hours += hour;
+										}
+									}
+								}
+							}
 
-						// Calculate total completed hours
-						if (taskCompleted) {
-							hours.completed += hour;
-						}
+							// Calculate total completed hours
+							if (taskCompleted) {
+								hours.completed += hour;
+							}
 
-						// Calculate total completed hours for each developer
-						if (taskAssignee !== null) {
-							if (users.hasOwnProperty(taskAssignee.id)) {
-								users[taskAssignee.id]['hours']['total'] += hour;
+							// Calculate total completed hours for each developer
+							if (taskAssignee !== null) {
+								if (users.hasOwnProperty(taskAssignee.id)) {
+									users[taskAssignee.id]['hours']['total'] += hour;
 
-								if (taskCompleted) {
-									users[taskAssignee.id]['hours']['completed'] += hour;
+									if (taskCompleted) {
+										users[taskAssignee.id]['hours']['completed'] += hour;
+									}
 								}
 							}
 						}
