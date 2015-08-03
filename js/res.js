@@ -3,6 +3,16 @@ Date.prototype.getWeek = function() {
 	return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
 };
 
+Array.prototype.in_array = function(needle) {
+	for (var i = 0, l = this.length; i < l; i++) {
+		if (this[i] == needle) {
+			return true;
+		}
+	}
+
+	return false;
+};
+
 var getLocation = function(href) {
 		var l = document.createElement("a");
 		l.href = href;

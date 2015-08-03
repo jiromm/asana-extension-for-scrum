@@ -64,8 +64,21 @@ $(function() {
 
 			return data;
 		},
+		getUsersArray = function() {
+			var userList = [];
+
+			for (var user in users) {
+				if (users.hasOwnProperty(user)) {
+					userList.push(user);
+				}
+			}
+
+			return userList;
+		},
 		processCalculation = function(data) {
 			$status.text('Calculating totals.');
+
+			var userList = getUsersArray();
 
 			for (var i in data.data) {
 				if (data.data.hasOwnProperty(i)) {
@@ -108,12 +121,26 @@ $(function() {
 
 						if (needle !== null) {
 							if (task.followers.length && hour > 0) {
+								var followerCount = 0;
+
 								for (var k in task.followers) {
 									if (task.followers.hasOwnProperty(k)) {
-										users[task.followers[k].id]['hours']['total'] += hour / task.followers.length;
+										if (userList.in_array(task.followers[k].id)) {
+											followerCount++;
+										}
+									}
+								}
+
+								for (var x in task.followers) {
+									if (task.followers.hasOwnProperty(x)) {
+										if (!userList.in_array(task.followers[x].id)) {
+											continue;
+										}
+
+										users[task.followers[x].id]['hours']['total'] += hour / followerCount;
 
 										if (taskCompleted) {
-											users[task.followers[k].id]['hours']['completed'] += hour / task.followers.length;
+											users[task.followers[x].id]['hours']['completed'] += hour / followerCount;
 										}
 									}
 								}
@@ -174,12 +201,22 @@ $(function() {
 			// Draw something cool
 			for (var o in users) {
 				if (users.hasOwnProperty(o)) {
+					var totalHours = users[o].hours.total;
+
+					if (totalHours % 1 !== 0) {
+						if (totalHours * 10 % 1 === 0) {
+							totalHours = totalHours.toFixed(1);
+						} else {
+							totalHours = totalHours.toFixed(2);
+						}
+					}
+
 					$users.append(
 						'<a href="#" class="list-group-item" data-user-id="' + o + '">' +
 							'<img src="' + users[o]['image'] + '" width="21" height="21"> &nbsp; ' +
 							'<span class="badge">' +
 								'<span class="done delim text-success">' + users[o].hours.completed + '</span>' +
-								'<span class="taken delim">' + users[o].hours.total + '</span>' +
+								'<span class="taken delim">' + totalHours + '</span>' +
 								'<span class="possible text-warning">' + users[o].hours.possible + '</span>' +
 							'</span>' +
 							'<input type="number" class="hide pull-right" step="1" min="0" max="40" value="' + users[o].hours.possible + '">' +
