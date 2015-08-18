@@ -91,6 +91,15 @@ var getLocation = function(href) {
 				"completed": 0,
 				"possible": 0
 			}
+		},
+		45707791044342: {
+			"name": "Harut Grigoryan",
+			"image": "https://s3.amazonaws.com/profile_photos/45707791044342.6ghgdwzni7VLBsuOvMXL_21x21.png",
+			"hours": {
+				"total": 0,
+				"completed": 0,
+				"possible": 0
+			}
 		}
 	},
 	testers = [
@@ -100,7 +109,8 @@ var getLocation = function(href) {
 		{id: 25719136431202, step: 1}, // Hrayr Papikyan
 		{id: 10124585031839, step: 1}, // Tigran Petrosyan
 		{id: 5754650264628,  step: 1}, // Tigran Tadevosyan
-		{id: 11686527531417, step: 1}  // Tigran Ghabuzyan
+		{id: 11686527531417, step: 1}, // Tigran Ghabuzyan
+		{id: 45707791044342, step: 1}  // Harut Grigoryan
 	],
 	admins = [8430834800772, 26433177772854/*, 10124585031830*/],
 	tagsIdList = {
