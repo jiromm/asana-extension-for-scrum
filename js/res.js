@@ -117,7 +117,7 @@ var getLocation = function(href) {
 		1367012534094:  'bug',
 		1379750807237:  'critical',
 		29189199083474: 'debt'
-	}
+	},
 	buildTestingQueue = function() {
 		var iteration = {},
 			i1,
