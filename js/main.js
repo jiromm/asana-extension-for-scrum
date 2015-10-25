@@ -114,7 +114,9 @@ $(function() {
 						stories.estimated++;
 
 						// Count section hours
-						section.hours[section.tempIndex] += hour;
+						if (taskCompleted) {
+							section.hours[section.tempIndex] += hour;
+						}
 
 						// Detect discussion
 						needle = /^discussion:\s/i.exec(data.data[i].name);
